@@ -25,10 +25,14 @@ const Bio = () => {
         siteMetadata {
           author {
             name
-            summary
+            webiste
+            location
+            employer
           }
           social {
             twitter
+            github
+            linkedin
           }
         }
       }
