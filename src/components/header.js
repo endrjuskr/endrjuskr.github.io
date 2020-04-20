@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "gatsby";
-import { rhythm, scale } from "../utils/typography"
+import React from 'react';
+import { Link } from 'gatsby';
+import { rhythm, scale } from '../utils/typography';
 
-const Header = ({isRoot, title}) => {
+const Header = ({ isRoot, title }) => {
   if (isRoot) {
     return (
       <h1
@@ -14,35 +14,34 @@ const Header = ({isRoot, title}) => {
       >
         <Link
           style={{
-            boxShadow: `none`,
-            color: `inherit`,
+            boxShadow: 'none',
+            color: 'inherit',
           }}
-          to={`/`}
+          to="/"
         >
           {title}
         </Link>
       </h1>
-    )
-  } else {
-    return (
-      <h3
-        style={{
-          fontFamily: `Montserrat, sans-serif`,
-          marginTop: 0,
-        }}
-      >
-        <Link
-          style={{
-            boxShadow: `none`,
-            color: `inherit`,
-          }}
-          to={`/`}
-        >
-          {title}
-        </Link>
-      </h3>
-    )
+    );
   }
-}
+  return (
+    <h3
+      style={{
+        fontFamily: 'Montserrat, sans-serif',
+        marginTop: 0,
+      }}
+    >
+      <Link
+        style={{
+          boxShadow: 'none',
+          color: 'inherit',
+        }}
+        to="/"
+      >
+        {title}
+      </Link>
+    </h3>
+  );
+};
 
 export default Header;

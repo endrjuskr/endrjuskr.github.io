@@ -5,9 +5,9 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
-import ProfileContainer from "./profile-container"
+import React from 'react';
+import { useStaticQuery, graphql } from 'gatsby';
+import ProfileContainer from './profile-container';
 
 const Profile = () => {
   const data = useStaticQuery(graphql`
@@ -34,10 +34,10 @@ const Profile = () => {
         }
       }
     }
-  `)
+  `);
 
-  const { author, social } = data.site.siteMetadata
-  return <ProfileContainer author={author} social={social} avatar={data.avatar} />
-}
+  const { author, social } = data.site.siteMetadata;
+  return <ProfileContainer author={author} social={social} avatar={data.avatar} />;
+};
 
-export default Profile
+export default Profile;

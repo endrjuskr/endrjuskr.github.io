@@ -1,38 +1,26 @@
-import React from "react";
-import Image from "gatsby-image"
-import { FaLink, FaMapMarkerAlt, FaUserTie } from "react-icons/fa";
+import React from 'react';
+import { FaLink, FaMapMarkerAlt, FaUserTie } from 'react-icons/fa';
 
-import { rhythm } from "../../utils/typography"
-import ProfileItem from "./profile-item";
-import ProfileLinkItem from "./profile-link-item";
+import ProfileItem from './profile-item';
+import ProfileLinkItem from './profile-link-item';
+import ProfilePicture from './profile-picture';
 
-const ProfileContainer = ({ avatar, author, social }) => (
-    <div
-      style={{
-        display: `flex`,
-        flexDirection: `column`,
-        alignItems: 'flex-start',
-      }}
-    >
-      <Image
-        fixed={avatar.childImageSharp.fixed}
-        alt={author.name}
-        style={{
-          marginBottom: rhythm(1 / 2),
-          minWidth: 150,
-          borderRadius: `100%`,
-        }}
-        imgStyle={{
-          borderRadius: `5px`,
-        }}
-      />
-      <div>
-          <ProfileLinkItem Icon={FaLink} label="https://github.io" />
-          <ProfileItem Icon={FaMapMarkerAlt} label={author.location} /> 
-          <ProfileItem Icon={FaUserTie} label={author.employer} /> 
-      </div>
-      
+const ProfileContainer = ({ avatar, author }) => (
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    }}
+  >
+    <ProfilePicture avatar={avatar} author={author} />
+    <div>
+      <ProfileLinkItem Icon={FaLink} label="https://github.io" />
+      <ProfileItem Icon={FaMapMarkerAlt} label={author.location} />
+      <ProfileItem Icon={FaUserTie} label={author.employer} />
     </div>
-)
+
+  </div>
+);
 
 export default ProfileContainer;

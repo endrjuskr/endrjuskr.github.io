@@ -1,22 +1,26 @@
-import React from "react"
+import React from 'react';
 
-import Footer from "./footer";
+import Footer from './footer';
 
-import { rhythm } from "../utils/typography"
-import Header from "./header";
-import Sidebar from "./sidebar";
+import { rhythm } from '../utils/typography';
+import Header from './header';
+import Sidebar from './sidebar';
 
 const Layout = ({ location, title, children }) => {
-  const rootPath = `${__PATH_PREFIX__}/`
+  const rootPath = `${__PATH_PREFIX__}/`;
   return (
     <div style={{
-      display: `flex`,
-    }}>
+      display: 'flex',
+      height: '100vh',
+      backgroundColor: '#0A1128',
+      color: '#F2E9E4',
+    }}
+    >
       <Sidebar isRoot={location.pathname === rootPath} />
       <div
         style={{
-          marginLeft: `auto`,
-          marginRight: `auto`,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           maxWidth: rhythm(24),
           padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
         }}
@@ -26,7 +30,7 @@ const Layout = ({ location, title, children }) => {
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
