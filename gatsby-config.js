@@ -3,15 +3,16 @@ module.exports = {
     title: 'Personal blog',
     author: {
       name: 'Andrzej Skrodzki',
+      website: 'endrjuskr.github.io',
       employer: 'Unit8',
       location: 'Poland',
     },
-    description: 'A starter blog demonstrating what Gatsby can do.',
+    description: 'endrjuskr\'s blog',
     siteUrl: 'https://gatsby-starter-blog-demo.netlify.com/',
     social: {
-      twitter: 'endrjuskr',
-      github: 'endrjuskr',
-      linkedin: 'askrodzki',
+      twitter: 'https://twitter.com/endrjuskr',
+      github: 'https://github.com/endrjuskr',
+      linkedin: 'https://linkedin.com/in/askrodzki',
     },
   },
   plugins: [

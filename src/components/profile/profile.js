@@ -23,6 +23,7 @@ const Profile = () => {
         siteMetadata {
           author {
             name
+            website
             location
             employer
           }
