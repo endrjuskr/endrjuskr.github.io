@@ -9,7 +9,7 @@ import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import ProfileContainer from './profile-container';
 
-const Profile = () => {
+const Profile = ({ isLarge }) => {
   const data = useStaticQuery(graphql`
     query BioQuery {
       avatar: file(absolutePath: { regex: "/profile-pic.jpg/" }) {
@@ -38,7 +38,9 @@ const Profile = () => {
   `);
 
   const { author, social } = data.site.siteMetadata;
-  return <ProfileContainer author={author} social={social} avatar={data.avatar} />;
+  return (
+    <ProfileContainer isLarge={isLarge} author={author} social={social} avatar={data.avatar} />
+  );
 };
 
 export default Profile;

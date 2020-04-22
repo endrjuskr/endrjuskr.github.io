@@ -6,13 +6,11 @@ import SEO from '../components/seo';
 import PostHeader from '../components/post/post-header';
 
 const BlogIndex = ({ data, location }) => {
-  const siteTitle = data.site.siteMetadata.title;
   const posts = data.allMarkdownRemark.edges;
 
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout location={location} title="">
       <SEO title="All posts" />
-      {/* <Profile /> */}
       <div>
         {posts.map(PostHeader)}
       </div>
@@ -24,11 +22,6 @@ export default BlogIndex;
 
 export const pageQuery = graphql`
   query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {

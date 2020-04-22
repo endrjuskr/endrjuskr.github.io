@@ -8,6 +8,8 @@ const ProfilePicture = ({ avatar, author }) => (
     borderRadius: '10px',
     background: 'white',
     height: '150px',
+    marginLeft: rhythm(1 / 2),
+    marginRight: rhythm(1 / 2),
   }}
   >
     <Image
