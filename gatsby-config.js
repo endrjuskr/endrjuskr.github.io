@@ -1,10 +1,12 @@
 module.exports = {
   siteMetadata: {
-    title: 'endrjuskr\'s blog',
     author: {
       name: 'Andrzej Skrodzki',
       website: 'endrjuskr.github.io',
-      employer: 'Unit8',
+      employer: {
+        name: 'Unit8',
+        website: 'https://unit8.co',
+      },
       location: 'Poland',
     },
     description: 'endrjuskr\'s blog',

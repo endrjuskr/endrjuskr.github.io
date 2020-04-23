@@ -1,7 +1,7 @@
 import React from 'react';
 import { rhythm } from '../../utils/typography';
 
-const ProfileLinkItem = ({ Icon, link }) => (link != null ? (
+const ProfileLinkItem = ({ Icon, label, link }) => (link != null ? (
   <div>
     <Icon />
     <a
@@ -10,9 +10,9 @@ const ProfileLinkItem = ({ Icon, link }) => (link != null ? (
         color: 'white',
         fontWeight: 600,
       }}
-      href={`https://${link}`}
+      href={link}
     >
-      {link}
+      {label}
     </a>
   </div>
 ) : null);

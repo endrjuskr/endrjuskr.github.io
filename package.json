@@ -50,7 +50,7 @@
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint src/**",
-    "lint-fix": "eslint --fix src/**",
+    "lint-fix": "eslint --fix src/**/*.js",
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",

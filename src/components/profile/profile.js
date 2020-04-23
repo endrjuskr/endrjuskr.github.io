@@ -25,7 +25,10 @@ const Profile = ({ isLarge }) => {
             name
             website
             location
-            employer
+            employer {
+              name,
+              website
+            }
           }
           social {
             twitter
