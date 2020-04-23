@@ -17,6 +17,7 @@ module.exports = {
       linkedin: 'https://linkedin.com/in/askrodzki',
     },
   },
+  pathPrefix: '/',
   plugins: [
     {
       resolve: 'gatsby-source-filesystem',

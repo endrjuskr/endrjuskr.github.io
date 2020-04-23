@@ -48,6 +48,7 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint src/**",
     "lint-fix": "eslint --fix src/**/*.js",
