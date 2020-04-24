@@ -9,6 +9,7 @@ module.exports = {
       },
       location: 'Poland',
     },
+    title: 'endrjuskr\'s blog',
     description: 'endrjuskr\'s blog',
     siteUrl: 'https://gatsby-starter-blog-demo.netlify.com/',
     social: {
