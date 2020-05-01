@@ -1,57 +1,122 @@
 ---
-title: Spark join
+title: Undestanding Spark's joins
 date: "2020-04-24T00:00:00.000Z"
-description: Lesson learned from dealing with joins of big tables in Spark.
+description: Notes about Spark's joins to avoid OOM in future
 ---
 
-When you are dealing with big data projects probably at some point you hit a challenge related to amount of data that can fit in one memory.
-
-Probably first step to handle it, is to increase number of partitions, which will distribute your data in smaller chunks to all your executors.
+Reason for this topis is following code:
 
 ``` python
-  data = data.repartition(2000)
-```
+  df = df.repartition(20000)
+  another_df = another_df.repartition(20000)
 
-It works smoothly, we know that our partitions fits in memory, but when we do join:
-
-``` python
   df = (
     df
     join.(another_df, "key", "inner")
   )
 ```
 
-We hit `Out of memory` exception, which can be seen with different error messages. What happened? We did some pre calculations and we know that key distribition is all right and we are aware that data will grow, but not beoynd executor's memory.
+It caused out of memory exception and encouraged me to dig deeper into what happened.
 
-## Dive in
+To make my points clear, here are details of my setup.
 
-When we look into Spark UI, we can see that during join we have 200 tasks. Where this number coming from? To understand it, we need to give more details about our dataframes. Even if each dataframe has small enough partition size, we don't know what is inside in each partition. During join we need to do the most pesimistic scenario, which means we compare every single pair of partitions. To avoid it Spark does shuffling, to be aware what `key`s are in each partition and do more optimal join. During this shuffle we need to change our partitions and Spark shuffles our data to `spark.sql.shuffle.partitions` partitions, which is a Spark configuration. Be default it is 200.
-
-## Examples
-
-I would like to show few examples of join and how they impact partition number.
-
-All samples below use following Spark configuration:
+Spark configuration relevant to my cases:
 
 ```
 spark.sql.autoBroadcastJoinThreshold -1 // Prevent automatic broadcast
 spark.sql.shuffle.partitions 200 // Default partitions during shuffle.
 ```
 
-Let's consider two join distinct scenarios. First one if when you join your data with another but small one, second with let's say same size.
+Three datasets:
 
-Let me introduce our actors:
+```
+large_df.columns
+Out: ['category', 'no', 'value']
 
-``` 
+large_df = large_df.repartition(10, "no")
+large_df.rdd.getNumPartitions()
+Out: 10
+
+another_large_df.columns
+Out: ['category_2', 'no', 'value_2']
+
+large_df = large_df.repartition(10, "no")
+large_df.rdd.getNumPartitions()
+Out: 10
+
+mapping.columns
+Out: ['category', 'category_name']
+
+mapping = mapping.coalesce(1)
+mapping.rdd.getNumPartitions()
+Out: 1
+
 ```
 
-
-If dataset we are joining is small, we can do `broadcast`, which will keep number of partitions from left handside dataset.
-
-If it is not the case, then we need to keep same partition keys on both datasets and join to keep same number of partitions after join.
+## Initial observation
 
 ``` python
-  df = df.repartition(2000, "key")
-  another_df = another_df.repartition(20, "key")
-  df = df.join(another_df, "key", left)
+
+join_different_partitions_keys = large_df.join(another_large_df, "no", "inner")
+join_different_partitions_keys.rdd.getNumPartitions()
+Out: 200
+
 ```
+
+Original dataframes `large_df` and `another_large_df` had 10 partitions each, but output is 200. The reason for it is shuffling. Both dataframes are having 10 partitions but Spark does not know what data is inside each partition of `another_large_df` in terms of `no`. More importantly, does not which `no`s are there. To avoid comparing every pair combination, Spark performs shuffle, which moves rows between partitions to have a notion of what `no`s are in each of them. It shuffles dataframe to 200 partitions instead of 10. 200 is coming from `spark.sql.shuffle.partitions`. 
+
+In my original situation trying fit 20000 partitions into 200 resulted in out of memory on an executor. I realized it when I noticed 200 tasks in Spark UI while executing join.
+
+## More observations
+
+Same observation when we have longer partition key:
+
+``` python
+another_large_df = another_large_df.repartition(10, "no", "category_2")
+join_longer_partitions_keys = large_df.join(another_large_df, "no", "inner")
+join_longer_partitions_keys.rdd.getNumPartitions()
+Out: 200
+```
+
+Similar observation in case of mismatch between partition key and join key:
+
+``` python
+another_large_df = another_large_df.withColumnRenamed("category_2", "category").repartition(10, "no")
+join_longer_join_key = large_df.join(another_large_df, ["no", "category"], "inner")
+join_longer_join_key.rdd.getNumPartitions()
+Out: 200
+```
+
+In case of matching keys we are receiving expected result:
+
+``` python
+another_large_df = another_large_df.withColumnRenamed("category", "category_2").repartition(10, "no")
+optimal_join = large_df.join(another_large_df, "no", "inner")
+optimal_join.rdd.getNumPartitions()
+Out: 10
+```
+
+## Broadcast observations
+
+Similar issue we experience in case of small data:
+
+```python
+not_broadcast_join = large_df.join(mapping, "category", "inner")
+not_broadcast_join.rdd.getNumPartitions()
+Out: 200
+```
+
+Broadcast solves the issue:
+
+``` python
+broadcast_join = large_df.join(F.broadcast(mapping), "category", "inner")
+broadcast_join.rdd.getNumPartitions()
+Out: 10
+```
+
+## Conclusion
+
+Here are some things to remember
+* use `broadcast` in case of joining with small dataframes, Spark automatically does it if it is below `spark.sql.autoBroadcastJoinThreshold`
+* know set `spark.sql.shuffle.partitions`
+* keep the same partition and join keys
