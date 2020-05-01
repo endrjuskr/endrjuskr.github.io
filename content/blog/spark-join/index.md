@@ -1,6 +1,6 @@
 ---
 title: Undestanding Spark's joins
-date: "2020-04-24T00:00:00.000Z"
+date: "2020-05-01T00:00:00.000Z"
 description: Notes about Spark's joins to avoid OOM in future
 ---
 
@@ -22,14 +22,14 @@ To make my points clear, here are details of my setup.
 
 Spark configuration relevant to my cases:
 
-```
+``` bash
 spark.sql.autoBroadcastJoinThreshold -1 // Prevent automatic broadcast
 spark.sql.shuffle.partitions 200 // Default partitions during shuffle.
 ```
 
 Three datasets:
 
-```
+``` python
 large_df.columns
 Out: ['category', 'no', 'value']
 
@@ -120,3 +120,5 @@ Here are some things to remember
 * use `broadcast` in case of joining with small dataframes, Spark automatically does it if it is below `spark.sql.autoBroadcastJoinThreshold`
 * know set `spark.sql.shuffle.partitions`
 * keep the same partition and join keys
+
+Entire code can be found [here](https://gist.github.com/endrjuskr/81c401a8825f929ecd1125018e71fbbe)
