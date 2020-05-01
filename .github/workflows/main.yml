@@ -3,7 +3,7 @@ name: main
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   build:
@@ -13,4 +13,4 @@ jobs:
       - uses: enriikke/gatsby-gh-pages-action@v2.1.1
         with:
           access-token: ${{ secrets.ACCESS_TOKEN }}
-          deploy-branch: gh-pages
+          deploy-branch: master
